@@ -64,6 +64,7 @@ export const createBooking = createServerFn({ method: "POST" })
     const { data: booking, error: bookingError } = await supabaseAdmin
       .from("bookings")
       .insert({
+        ticket_number: "",
         customer_id: customerId,
         source: "website",
         status: "pending",
@@ -76,26 +77,18 @@ export const createBooking = createServerFn({ method: "POST" })
         description: data.description || null,
         notes: data.notes || null,
       })
-      .select("ticket_number")
+      .select("id, ticket_number")
       .single();
 
     if (bookingError || !booking) throw new Error("Could not save your booking. Please try again.");
 
-    const { data: bookingRow } = await supabaseAdmin
-      .from("bookings")
-      .select("id")
-      .eq("ticket_number", booking.ticket_number)
-      .single();
-
-    if (bookingRow) {
-      await supabaseAdmin.from("booking_services").insert(
-        data.services.map((service) => ({
-          booking_id: bookingRow.id,
+    await supabaseAdmin.from("booking_services").insert(
+      data.services.map((service) => ({
+          booking_id: booking.id,
           service_slug: service.slug,
           service_name: service.name,
-        })),
-      );
-    }
+      })),
+    );
 
     return { ticketNumber: booking.ticket_number };
   });
