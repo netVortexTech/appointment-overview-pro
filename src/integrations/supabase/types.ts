@@ -14,7 +14,184 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      booking_services: {
+        Row: {
+          booking_id: string
+          id: string
+          service_name: string
+          service_slug: string
+        }
+        Insert: {
+          booking_id: string
+          id?: string
+          service_name: string
+          service_slug: string
+        }
+        Update: {
+          booking_id?: string
+          id?: string
+          service_name?: string
+          service_slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_services_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          amount_charged: number | null
+          area: string
+          assigned_staff: string | null
+          bolt_location: string | null
+          business_id: string
+          created_at: string
+          customer_id: string
+          description: string | null
+          discount_amount: number | null
+          discount_reason: string | null
+          final_amount: number | null
+          id: string
+          internal_notes: string | null
+          nearest_place: string | null
+          notes: string | null
+          preferred_date: string
+          preferred_time: string
+          priority: string
+          service_status: string | null
+          source: string
+          status: string
+          ticket_number: string
+        }
+        Insert: {
+          amount_charged?: number | null
+          area: string
+          assigned_staff?: string | null
+          bolt_location?: string | null
+          business_id?: string
+          created_at?: string
+          customer_id: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_reason?: string | null
+          final_amount?: number | null
+          id?: string
+          internal_notes?: string | null
+          nearest_place?: string | null
+          notes?: string | null
+          preferred_date: string
+          preferred_time: string
+          priority?: string
+          service_status?: string | null
+          source?: string
+          status?: string
+          ticket_number: string
+        }
+        Update: {
+          amount_charged?: number | null
+          area?: string
+          assigned_staff?: string | null
+          bolt_location?: string | null
+          business_id?: string
+          created_at?: string
+          customer_id?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_reason?: string | null
+          final_amount?: number | null
+          id?: string
+          internal_notes?: string | null
+          nearest_place?: string | null
+          notes?: string | null
+          preferred_date?: string
+          preferred_time?: string
+          priority?: string
+          service_status?: string | null
+          source?: string
+          status?: string
+          ticket_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          phone_number: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          phone_number: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          phone_number?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          availability: string
+          category: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price_text: string
+          sort_order: number
+        }
+        Insert: {
+          availability?: string
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price_text?: string
+          sort_order?: number
+        }
+        Update: {
+          availability?: string
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price_text?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
