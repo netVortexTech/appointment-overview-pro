@@ -22,9 +22,34 @@ const bookingSchema = z.object({
 
 export type BookingInput = z.infer<typeof bookingSchema>;
 
+// Admin webhook (single sanctioned writer: find_or_create_customer + generate_ticket_number)
+// Set VITE_ADMIN_URL=https://admin.palmcleaners.vercel.app on palmcleaners.vercel.app Vercel env
+const ADMIN_URL =
+  (typeof process !== "undefined" && (process.env as Record<string, string | undefined>)["VITE_ADMIN_URL"]) ||
+  (typeof import.meta !== "undefined" && (import.meta as unknown as { env: Record<string, string> }).env?.["VITE_ADMIN_URL"]) ||
+  "";
+
 export const createBooking = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => bookingSchema.parse(input))
   .handler(async ({ data }) => {
+    // 1) Prefer admin webhook (server-controlled ticket + dedupe) if configured
+    if (ADMIN_URL) {
+      try {
+        const res = await fetch(`${ADMIN_URL.replace(/\/$/, "")}/api/webhooks/website-booking`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (res.ok) {
+          const j = (await res.json()) as { ticketNumber: string };
+          if (j.ticketNumber) return j;
+        }
+      } catch {
+        // fallback to direct Supabase insert below
+      }
+    }
+
+    // 2) Fallback: direct Supabase insert (compat triggers on xsbxktytzqwdkgrqfytm handle business_id + ticket)
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const phone = data.phoneNumber.replace(/\s+/g, "");
@@ -84,9 +109,9 @@ export const createBooking = createServerFn({ method: "POST" })
 
     await supabaseAdmin.from("booking_services").insert(
       data.services.map((service) => ({
-          booking_id: booking.id,
-          service_slug: service.slug,
-          service_name: service.name,
+        booking_id: booking.id,
+        service_slug: service.slug,
+        service_name: service.name,
       })),
     );
 
@@ -122,8 +147,8 @@ export const getBookingByTicket = createServerFn({ method: "GET" })
       preferredDate: booking.preferred_date,
       preferredTime: booking.preferred_time,
       createdAt: booking.created_at,
-      customerName: booking.customers?.full_name ?? "",
-      services: (booking.booking_services ?? []).map((s) => s.service_name),
+      customerName: (booking.customers as unknown as { full_name: string } | null)?.full_name ?? "",
+      services: ((booking.booking_services ?? []) as { service_name: string }[]).map((s) => s.service_name),
     };
   });
 
