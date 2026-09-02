@@ -3,9 +3,18 @@ import { CheckCircle2 } from "lucide-react";
 
 import { PageHero } from "@/components/page-hero";
 import { Button } from "@/components/ui/button";
-import { categoryLabels, services, type ServiceCategory } from "@/lib/services";
+import { categoryLabels, services as hardcodedServices, type ServiceCategory } from "@/lib/services";
+import { listServices } from "@/lib/services.functions";
 
 export const Route = createFileRoute("/services")({
+  loader: async () => {
+    try {
+      const live = await listServices();
+      return { services: live ?? hardcodedServices };
+    } catch {
+      return { services: hardcodedServices };
+    }
+  },
   head: () => ({
     meta: [
       { title: "Cleaning Services | PALMCLEANERS" },
@@ -28,6 +37,7 @@ export const Route = createFileRoute("/services")({
 const order: ServiceCategory[] = ["residential", "commercial", "specialized"];
 
 function ServicesPage() {
+  const { services } = Route.useLoaderData();
   return (
     <>
       <PageHero
