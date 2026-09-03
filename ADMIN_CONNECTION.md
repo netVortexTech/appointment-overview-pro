@@ -1,4 +1,4 @@
-# Admin Panel Connection — palmcleaners.vercel.app ↔ admin.palmcleaners.vercel.app
+# Admin Panel Connection — palmcleaners.vercel.app ↔ adminpalmcleaners.vercel.app
 
 Shared Supabase: `https://xsbxktytzqwdkgrqfytm.supabase.co` (migrated 21 tables, RLS, `generate_ticket_number` → `PC-2026-00001`)
 
@@ -10,10 +10,10 @@ VITE_SUPABASE_URL=https://xsbxktytzqwdkgrqfytm.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ha8F4Gd4j-TyV24718AGoA_q7rXzWog
 SUPABASE_URL=https://xsbxktytzqwdkgrqfytm.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzYnhrdHl0enF3ZGtncnFmeXRtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODI1NTQzNSwiZXhwIjoyMTAzODMxNDM1fQ.hiSmnyMFl5PF7W2CL2_3HDSZyt7jmkMNd1eqt2e2qI0
-VITE_ADMIN_URL=https://admin.palmcleaners.vercel.app
+VITE_ADMIN_URL=https://adminpalmcleaners.vercel.app
 ```
 
-On **admin.palmcleaners.vercel.app** (Default Project):
+On **adminpalmcleaners.vercel.app** (Default Project):
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://xsbxktytzqwdkgrqfytm.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...Anon
